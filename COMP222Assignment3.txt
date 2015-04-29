@@ -1,0 +1,89 @@
+﻿Error detection / correction:
+1) Enter parameters
+2) Check Hamming code
+3) Quit
+
+
+#include <math.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+
+// Declare global vars
+
+
+char *hamming = NULL;
+int parity;
+int maxLength;
+
+
+void option1(){
+        // Declare local variables
+        // Prompt for parameters: maxLength and parity
+        
+
+
+// Allocate memory for the hamming string
+        hamming = (char*)malloc(maxLength*sizeof(char));
+}
+
+
+void option2(){
+        // Declare local vars
+        int codeLength;
+
+
+        // Prompt for hamming code
+        printf(“ ”);
+        scanf(“%s”,hamming);
+
+
+        // Determine the actual length of the input Hamming code
+        codeLength = strlen(hamming);
+
+
+// Check for an error
+// For each parity bit
+int checkParity;
+int errorBit;
+for(int i = 1; i < codeLength; i *= 2 ){
+        // Initialize checkParity to user set parity
+        checkParity = parity;
+        for(int j = i; j < codeLength; j+=2i ){ 
+// Responsible for each starting position of a consecutive sequence
+for(int k = j; k < codeLength || k = (i+j)-1; k++ ){ 
+// Responsible for each position checked
+                                checkParity = checkParity ^ (hamming[codeLength - k]-’0’);        
+}
+}
+errorBit += checkParity*i;
+        }
+
+
+        // Correct the error, ‘1’+’0’-errorBit
+        switch(errorBit){
+                case 0: printf(“There is no bit error.”);
+                         break;
+default: printf(“There is an error in bit %i”, errorBit);
+ hamming[codeLength - errorBit] = ‘1’+’0’-errorBit;
+         printf(“Corrected hamming is: %s”,hamming);
+ break;
+}
+}
+
+
+
+
+if (hamming[codeLength - errorBit] == 0){
+        hamming[codeLength - errorBit] = ‘1’;
+}
+else{
+        hamming[codeLength - errorBit] = ‘0’;
+}
+
+
+xor in C is ^
+P1’ = parity ^ C1 ^ C3 ^ C5 ^ C7
+P2’ = parity ^ C2 ^ C3 ^ C6 ^ C7
+P4’ = parity ^ C4 ^ C5 ^ C6 ^ C7

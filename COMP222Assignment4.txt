@@ -1,0 +1,139 @@
+﻿1) Set parameters
+2) Map virtual address
+3) Print page table
+4) Quit program
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+
+int mmSize;
+int pageSize;
+int replacement;
+int numRows;
+        
+
+
+// Declare global cars
+// Define page table - fully associative
+
+
+struct node{
+        int vp;                // Virtual page
+        int pf;                // Page frame
+} * pageTable = NULL;
+typedef struct node row;
+
+
+
+
+void option1(){
+        // Declare local variables
+
+
+
+
+        // Prompt user for mmSize
+        // Prompt user for pageSize
+        // Prompt user for replacement
+        
+numRows = mmSize/pageSize; 
+
+
+        // Allocate and initialize our page table
+        
+        pageTable = (row*)malloc(numRows*sizeof(row))
+        
+        // For-loop set every virtual page field to -1
+        for(int i = 1; i < numRows; i++){
+                pageTable[i].vp = -1;
+}
+}
+
+
+void option2(){
+        // Declare local var
+        int vtag;
+        int offset;
+        int vaddr;
+        // Prompt for virtual address
+
+
+// Translate virtual address into vtag and offset
+
+
+vtag =         vaddr/pageSize;
+offset = vaddr%pageSize’;
+
+
+        // Check for hit or fault in PT
+        int index=0;
+                while((index<numRows)&&(pageTable[index].vp != -1)&&(pageTable[index].vp != vtag)){
+                index++;
+}
+
+
+        // Case 1:  full table and a fault (this is where replacements happen)
+        if (index == numRows){
+// Replace LRU/FIFO entry at index 0
+int pfEntry pageTable[0].pf;
+for(int i = 0; i < numRows-1; i++){
+        pageTable[i]= pageTable[i+1];
+}
+        
+// Replace with new entry
+pageTable[numRows-1].vp = vtag;
+        pageTable[numRows-1].pf = pfEntry;
+        
+// Print message “Page fault!”
+        }
+
+
+        // Case 2:  unused entry in the table (fault)
+else if(pageTable[index].vp == -1){
+        pageTable[index].vp = vtag;
+        pageTable[index].pf = index;
+        // Print message - “Page fault!”
+}        
+
+
+        // Case 3: hit in page table (implement replacement policy
+        else {
+                int pfEntry = pageTable[index].pf;
+                // Generate physical address
+                physAddr = (pageTable[index].pf)*pageSize + offset;
+                
+                // Rearrange table according to LRU/FIFO;
+        if(replacement == 0){
+                // Rearrange table according to hit entry
+int i
+                for( i = index; i < numRows-1; i++ ){
+                        if (pageTable[i+1].vp == -1){
+break;
+}
+pageTable[i] = pageTable[i+1];
+}
+pageTable[i].vp = vtag;
+pageTable[i].pf = pfEntry;
+}
+        // Print out virtual address maps to physical address
+}
+}
+
+
+option3(){
+        // Declare local variable for iterating
+        int index = 0;
+        while(pageTable[index].vp != -1){
+                // Print VP pageTable[index].vp -> PF pageTable[index].pf
+        
+}
+}
+
+
+Quit:
+
+
+if(pageTable != NULL)
+        free(pageTable)

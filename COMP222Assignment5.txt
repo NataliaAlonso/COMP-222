@@ -1,0 +1,191 @@
+﻿#include <stdio.h>
+#include <stdlib.h>
+/* declare global variables*/
+int numInstr;
+
+
+struct node{
+        int dest;
+int src1; 
+int src2;
+        int delay;
+} * set = NULL;
+typedef struct node instr;
+
+
+void optionOne(){
+        // declare local variables
+        char input[9];
+        
+// Prompt for number of instructions -> numInstr
+// Allocate memory for scoreboard
+set = (instr*)malloc((numInstr+1)*sizeof(instr));
+set[0]=-1;
+
+
+// Prompt for instructions
+for(int i = 1; i <= numInstr; i++){
+        // Prompt for instr line
+        printf(“%d) “,i);                // Numbered prompt
+        scanf(“%s”,input);
+
+
+// Parse the instruction
+set[i].dest = input[1];
+set[i].src1 = input[4];
+set[i].src2 = input[7];
+}
+}
+
+
+void optionTwo(){
+        // declare local variables & initialize
+int currentDelay = 0;
+int previousDelay = 0;
+        set[1].delay = 0;
+        for(int i = 2; int <= numInstr; i++){
+                previousDelay = 0;
+                currentDelay = 0;
+                if((set[i-2].dest == set[i].src1) || (set[i-2].dest == set[i].src2)){
+if(previousDelay == 0){
+        currentDelay = 1;
+        previousDelay = 1;
+}                        
+                        else{
+                                currentDelay = 0;
+                                previousDelay = 0;
+}
+
+
+}
+else{ previousDelay = 0; }
+
+
+if ((set[i-1].dest == set[i].src1) || (set[i-1].dest == set[i].src2)){
+        currentDelay = 2;
+        previousDelay = 1;
+}
+set[i].delay = set[i-1].delay + currentDelay + 1;
+}
+prinf(“Total number of cycles: %d\n”, set[numInstr].delay + 6);
+print_chart();
+}
+
+
+//superscalar
+void optionThree(){
+int prev_delay1 = 0;
+int prev_delay2 = 0;
+int prev_delay3 = 0;
+int prev_delay4 = 0;
+int curr_delay = 0;
+int pipe_delay = 1;
+int i = 2;
+for(i; i<= numInstr; i++){
+pipe_delay = 1^ pipe_delay;
+curr_delay = 0;
+if(i> 5){
+if((set[i-5].dest == set[i].src1)|| (set[i-5].dest == set[i].src2)) { 
+pipe_delay = 1;
+}
+}
+if (i > 4){
+if((set[i-4].dest == set[i].src1) || (set[i-4].dest == set[i].src2)){
+if ((pipe_delay == 1) && (prev_delay1 == 0) && (prev_delay2 == 0) && (prev_delay3 == 0) && (prev_delay4 == 0)){
+curr_delay = 1;
+prev_delay4 = 1;
+}
+else{
+prev_delay4 = 0;
+}
+pipe_delay = 1; 
+}
+}
+if (i > 3){
+if((set[i-3].dest == set[i].src1) || (set[i-3].dest == set[i].src2)){
+if ((prev_delay1 == 0) && (prev_delay2 == 0) && (prev_delay3 == 0) ){
+curr_delay = 1;
+prev_delay3 = 1;
+}
+else{
+curr_delay = 1;
+prev_delay3 = 0;
+}
+pipe_delay = 1; 
+}
+}
+if (i > 2){
+if((set[i-2].dest == set[i].src1) || (set[i-2].dest == set[i].src2)){
+if ((pipe_delay == 1) && (prev_delay1 == 0) && (prev_delay2 == 0)){
+curr_delay = 2;
+prev_delay2 = 1;
+}
+else{
+prev_delay2 = 0;
+}
+pipe_delay = 1; 
+}
+}
+if (i > 1){
+if((set[i-1].dest == set[i].src1) || (set[i-1].dest == set[i].src2)){
+curr_delay = 2;
+prev_delay1 = 1;
+pipe_delay = 1;
+}
+else{
+prev_delay1 = 0;
+}
+//pipe_delay = 1;
+}
+set[i].delay = set[i-1].delay+curr_delay+pipe_delay;
+}
+printf("Total number of cycles: %d\n", set[numInstr].delay+6);
+print_chart();
+}
+
+
+void print_chart(){
+int i = 1;
+int k = 0;
+for (i; i <= numInstr;i++){
+printf("%d)", i);
+for (k = 0; k < set[i].delay ; k++){
+printf("\t");
+}
+printf("FI\tDI\tCO\tFO\tEI\tWO\n");
+}
+}
+
+
+int main()
+{
+int input = 0;
+    while( input < 5 ){                                   // Print menu
+        printf("Pipelined / Superscalar instruction performance\n");
+        printf("--------------------------------------\n");
+        printf("1) Enter instructions\n");
+        printf("2) Calculate total cycle count on 6-stage pipelined architecture\n");
+        printf("3) Calculate total cycle count on 6-stage superscalar architecture\n");
+        printf("4) Quit program\n");
+
+
+
+
+        printf("\nEnter selection: ");                  // Get user input
+        scanf("%i",&input);
+
+
+        switch(input){                                  // Menu selection
+
+
+            case 1: optionOne();
+                    break;
+            case 2: optionTwo();
+                    break;
+            case 3: optionThree();
+                    break;
+            default: return 0;
+        }
+    }
+    return 1;
+}

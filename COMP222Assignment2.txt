@@ -1,0 +1,99 @@
+﻿1) Enter Parameters
+2) Access cache read/write
+3) Quit (free memory)
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+
+// Declare Global Vars
+
+
+int* mainMemory = NULL;        // First declare main memory as a dynamic array of words (int)
+int mmSize;
+int cacheSize;
+int blockSize;
+int numRows;
+
+
+struct node{                        // Declare cache as a dynamic array of lines
+int tag;
+int* block;
+} *cache = NULL;
+typedef struct node line;
+
+
+void option1(){
+        // Prompt for mainMemory size -> mmSize
+        // Prompt for cache size -> cacheSize
+        // Prompt for block size -> blockSize
+
+
+        mainMemory = (int*)malloc(mmSize*sizeof(int));        // Allocate mainMemory
+        for (int i = 0; i < mmSize; i++)                                // Initialize mainMemory with mmSize - index
+                mainMemory[i] = mmSize - i;
+        
+        numRows = cacheSize / blockSize;
+        cache = (line*)malloc( numRows * sizeof(line) );        // Allocate cache based on # of rows 
+        for (int i = 0; i < numRows; i++){                         // Initialize cache based on # of rows        
+cache[i].tag = -1;
+                cache[i].block = NULL;
+        }
+}
+
+
+void option2(){
+        int operation;                                                // Prompt for the read/write signal ( 0 or 1)
+        int mmAddr;                                                // Prompt for main memory address to access
+        int data;                                                // Prompt for data to write, if write selected
+        int tag = mmAddr/cacheSize;                         // Translate to corresponding cache address fields
+int line = (mmAddr%cacheSize)/blockSize;
+int word= mmAddr%blockSize;
+// Check for hit or miss in cache
+// Case # 1: Miss due to unallocated block (compulsory miss -> nothing in block)
+if ( cache[line].tag == -1 ){                                // if the cache’s tag at line == -1
+                                                        // allocate the appropriate block
+        cache[line].block = (int*)malloc(blockSize*sizeof(int))
+} // END CASE # 1
+        
+        // Case # 2: Miss due to non-matching tags (conflict miss)
+        if ( cache[line].tag != tag ){
+                // Transfer entire block from mainMemory to cache
+
+
+                // Determine start of block: baseAddr
+                int baseAddr = (mmAddr / blockSize)*blockSize;
+                for(int i = 0; i < blockSize; i++) {                // Transfer block
+                        // cache at line, block at i is getting mainMemory at baseAddr + i
+                        cache[line].block[i] = mainMemory[baseAddr + i];        
+}
+cache[line].tag = tag;                                // Overwrite tag
+// Print out message of read miss or write miss (user tells you whether read or write)
+} // END CASE # 2
+
+
+// Case # 3: Hit due to matching tags                        // cache[line].tag == tag
+else {                                                        
+        if( operation == 0 ){
+        // Do nothing; we are not changing the cache
+        // Print “Read hit.”
+}
+else{
+        // Do nothing; we are not changing the cache
+        // Print “Write hit.”
+}
+        }
+
+
+        if ( operation == 0 ){
+                data = cache[line].block[word];
+}
+else {
+        cache[line].block[word] = data;                        // Update cache
+        mainMemory[mmAddr] = data;                        // Update main memory (write-through)
+}
+// print message         
+}
